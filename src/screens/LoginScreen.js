@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { View, Text, TextInput, Pressable } from "react-native";
 
-export default function RegisterScreen() {
+import { LoginStyle } from "../styles/LoginRegisterStyle";
+import { getAllUsers, loginAccount } from "../apiConnection/LoginRegister"
+
+export default function LoginScreen() {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
 
@@ -11,10 +14,16 @@ export default function RegisterScreen() {
       <TextInput value={name} onChangeText={setName}/>
       <Text> Password </Text>
       <TextInput value={password} onChangeText={setPassword}/>
-      <Pressable>
-        <Text>
+      <Pressable onPress={() => registerAccount(name, password)}>
+        <Text >
           !!!
         </Text>
+      </Pressable>
+      <Pressable onPress={() => loginAccount(name, password)}>
+        <Text> 2 </Text>
+      </Pressable>
+      <Pressable onPress={getAllUsers}>
+        <Text> O </Text>
       </Pressable>
     </View>
 
