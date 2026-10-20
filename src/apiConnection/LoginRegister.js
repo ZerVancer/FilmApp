@@ -49,13 +49,14 @@ export async function registerAccount(name, password) {
   } catch (error) {
     console.error(error.message);
     ToastAndroid.show("An error accured, try again.", ToastAndroid.SHORT)
+    return false
   }
 }
 
 export async function loginAccount(name, password) {
   if (await isLogedIn()) return
   try {
-    const response = await fetch(accountPath+"/login="+name+"&"+password, {
+    const response = await fetch(accountPath+"/login="+name+"/"+password, {
       method: "GET",
     })
 
@@ -78,6 +79,7 @@ export async function loginAccount(name, password) {
   } catch (error) {
     console.error(error.message);
     ToastAndroid.show("An error accured, try again.", ToastAndroid.SHORT)
+    return false
   }
 }
 

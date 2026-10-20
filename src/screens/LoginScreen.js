@@ -18,14 +18,14 @@ export default function LoginScreen({
       <Text style={defaultStyle.text}> Password: </Text>
       <TextInput value={password} style={loginStyle.inputField} onChangeText={setPassword}/>
       <Pressable style={defaultStyle.button} onPress={() => {
-        if (registerAccount(name, password)) navigation.goBack()
+        if (registerAccount(name, password)) () => {navigation.goBack()}
         }}>
         <Text style={defaultStyle.text}>
           Register
         </Text>
       </Pressable>
       <Pressable style={defaultStyle.button} onPress={() => {
-        if (loginAccount(name, password)) navigation.goBack()
+        if (loginAccount(name, password)) () => {navigation.goBack()}
         }}>
         <Text style={defaultStyle.text}> Login </Text>
       </Pressable>

@@ -27,7 +27,7 @@ export async function createComment(movieId, accountId, content) {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ content: content, movieId: movieId, accountId: accountId})
+      body: JSON.stringify({ content: content, movie: {"id": movieId}, accountId: {"id": accountId}})
     })
 
     if (!response.ok) {

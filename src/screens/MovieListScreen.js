@@ -24,6 +24,9 @@ export default function MovieListScreen({
       {!movies?<View style={[defaultStyle.loadingContainer, defaultStyle.container]}><Text style={defaultStyle.text}>Loading...</Text></View>:
       <FlatList
         style={menuListStyle.list}
+        initialNumToRender={10}
+        maxToRenderPerBatch={1}
+        windowSize={11}
         data={movies}
         keyExtractor={(movie) => movie.id}
         renderItem={(movie) => (
