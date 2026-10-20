@@ -13,33 +13,49 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator initialRouteName='HomeScreen'>
         <Stack.Screen
           name="HomeScreen"
-          component={MovieListScreen}
+          component={HomeScreen}
           options={{
-            title: "Home"
+            title: "Home",
+            headerStyle: {
+              backgroundColor: "#1A1A1A"
+            },
+            headerTintColor: "white"
           }}
         />
         <Stack.Screen
           name="LoginScreen"
           component={LoginScreen}
           options={{
-            title: "Login"
+            title: "Login",
+            headerStyle: {
+              backgroundColor: "#1A1A1A"
+            },
+            headerTintColor: "white"
           }}
         />
         <Stack.Screen
           name="MovieListScreen"
           component={MovieListScreen}
           options={{
-            title: "MovieList"
+            title: "MovieList",
+            headerStyle: {
+              backgroundColor: "#1A1A1A"
+            },
+            headerTintColor: "white"
           }}
         />
         <Stack.Screen
           name="MovieDetailsScreen"
           component={MovieDetailsScreen}
           options={{
-            title: "MovieDetails"
+            title: "MovieDetails",
+            headerStyle: {
+              backgroundColor: "#1A1A1A"
+            },
+            headerTintColor: "white"
           }}
         />
       </Stack.Navigator>

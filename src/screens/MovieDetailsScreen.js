@@ -6,7 +6,7 @@ import { getMovieComments } from "../apiConnection/CommentsAccess";
 export default function MovieDetailsScreen({
   route
 }) {
-  const [movieTitle, setMovieTitle] = useState();
+  const [movieTitle, setMovieTitle] = useState("");
   const [movie, setMovie] = useState();
   const [comments, setComments] = useState([]);
 
@@ -14,16 +14,16 @@ export default function MovieDetailsScreen({
 
   useEffect(() => {
     const init = async () => {
-      setMovie(await getMovie(movieId));
-      console.log("18", movie)
-      setMovieTitle(movie.title);
+      const m = await getMovie(movieId);
+      setMovie(m);
+      setMovieTitle(m.title);
       setComments(await getMovieComments(movieId));
     }
 
     init();
 
   }, [])
-  console.log(movie);
+
   return !movie?null:(
     <View>
       <Text>

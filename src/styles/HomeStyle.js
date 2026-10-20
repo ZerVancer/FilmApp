@@ -1,29 +1,51 @@
 import { StyleSheet } from "react-native";
 
 export const homeStyle = StyleSheet.create({
-   container: {
-     flex: 2,
-     backgroundColor: "darkgray",
-   },
+  headerBlock: {
+    alignItems: "center",
+    height: "140",
+    padding: 10,
+    backgroundColor: "indigo",
 
-   headerView: {
-     alignItems: "center",
-     padding: 10,
-     backgroundColor: "orange",
+  },
 
-   },
+  headerBlockText: {
+    fontSize: 60,
+  },
 
-   header: {
-     fontSize: 40,
-   },
+  headerBlockDesc: {
+    fontSize: 20,
+    paddingRight: 2,
+  },
 
-   headerDesc: {
-     fontSize: 13,
-     paddingRight: 2,
-   },
+  textBlock: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 10,
+  },
 
-   text: {
-     padding: 10,
-     backgroundColor: "gray",
-   }
- });
+  textblockText: {
+    color: "white",
+  },
+
+  moviesBlock: {
+    flex: 3,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  moviesBlockText: {
+    color: "white",
+  },
+
+  loginoutBlock: {
+    flex: 3,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  loginoutBlockText: {
+    color: "white",
+  }
+});

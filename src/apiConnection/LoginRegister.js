@@ -1,8 +1,23 @@
 
 import { ToastAndroid } from "react-native";
 import { accountPath } from "./DatabasePath";
+import * as SecureStore from "expo-secure-store";
+
+async function isLogedIn() {
+  const result = (await SecureStore.getItemAsync("user") != null)
+  if (result) ToastAndroid.show("An user is already logged in on this machine!", ToastAndroid.SHORT)
+  return result
+}
+
+async function login(account) {
+  await SecureStore.setItemAsync(
+        "user",
+        JSON.stringify(account)
+      )
+}
 
 export async function registerAccount(name, password) {
+  if (isLogedIn) return
   try {
     const response = await fetch(accountPath+"/register", {
       method: "POST",
@@ -13,29 +28,34 @@ export async function registerAccount(name, password) {
       body: JSON.stringify({ name: name, password: password })
     })
 
-    if (!response.ok) {
-      throw new Error(`Response status: ${response.status}`);
-    }
+    let responseBody = await response.text();
 
-    const responseBody = await response.text();
+    if (response.status == 500) {
+      responseBody = ""
+    } else if (!response.ok) {
+      throw new Error(`Response status: ${response.status}`);
+    } 
 
     if(responseBody != "") {
       const result = JSON.parse(responseBody);
-      console.log(result);
-      ToastAndroid.show("Account registered!", ToastAndroid.SHORT)
+      console.log(result)
+      login(responseBody)
+      ToastAndroid.show("Account registered and you are signed in!", ToastAndroid.SHORT)
+      return true
     } else {
       ToastAndroid.show("Account name is taken!", ToastAndroid.SHORT)
     }
 
   } catch (error) {
     console.error(error.message);
-    ToastAndroid.show("An error accured, try again.")
+    ToastAndroid.show("An error accured, try again.", ToastAndroid.SHORT)
   }
 }
 
 export async function loginAccount(name, password) {
+  if (await isLogedIn()) return
   try {
-    const response = await fetch(accountPath+"/"+name+"&"+password, {
+    const response = await fetch(accountPath+"/login="+name+"&"+password, {
       method: "GET",
     })
 
@@ -46,16 +66,18 @@ export async function loginAccount(name, password) {
     const responseBody = await response.text();
 
     if(responseBody != "") {
-      const result = JSON.parse(responseBody);
-      console.log(result);
+      const result = JSON.parse(responseBody)
+      console.log(result)
+      login(responseBody)
       ToastAndroid.show("You are now logged in!", ToastAndroid.SHORT)
+      return true
     } else {
       ToastAndroid.show("Name or password was incorrect!", ToastAndroid.SHORT)
     }
     
   } catch (error) {
     console.error(error.message);
-    ToastAndroid.show("An error accured, try again.")
+    ToastAndroid.show("An error accured, try again.", ToastAndroid.SHORT)
   }
 }
 
@@ -69,10 +91,14 @@ export async function getAllAccounts() {
       throw new Error(`Response status: ${response.status}`);
     }
 
-    const result = await response.json();
-    console.log(result);
+    const responseBody = await response.text();
+
+    if(responseBody != "") {
+      const result = JSON.parse(responseBody);
+      console.log(result);
+    }
   } catch (error) {
     console.error(error.message);
-    ToastAndroid.show("An error accured, try again.")
+    ToastAndroid.show("An error accured, try again.", ToastAndroid.SHORT)
   }
 }

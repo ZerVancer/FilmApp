@@ -1,6 +1,8 @@
 import { View, FlatList, Text, Pressable } from "react-native";
 import { getMovies } from "../apiConnection/MoviesAccess";
 import { useEffect, useState } from "react";
+import { defaultStyle } from "../styles/DefaultStyle";
+import { menuListStyle } from "../styles/MenuListStyle";
 
 export default function MovieListScreen({
   navigation
@@ -17,19 +19,20 @@ export default function MovieListScreen({
   }, [])
 
   return(
-    <View>
-      <Text>Movies</Text>
+    <View style={defaultStyle.container}>
+      <Text style={[menuListStyle.header, defaultStyle.text]}>Movies</Text>
       <FlatList
+        style={menuListStyle.list}
         data={movies}
         keyExtractor={(movie) => movie.id}
         renderItem={(movie) => (
-          <Pressable onPress={() => navigation.navigate(
+          <Pressable style={[defaultStyle.button, menuListStyle.listItems]} onPress={() => navigation.navigate(
             "MovieDetailsScreen",
             {
               movieId: movie.item.id
             }
           )}>
-            <Text>
+            <Text style={defaultStyle.text}>
               Movie: {movie.item.title}
             </Text>
           </Pressable>
