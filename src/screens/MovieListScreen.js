@@ -18,9 +18,10 @@ export default function MovieListScreen({
     listMovies()
   }, [])
 
-  return(
+  return (
     <View style={defaultStyle.container}>
-      <Text style={[menuListStyle.header, defaultStyle.text]}>Movies</Text>
+      <Text style={defaultStyle.header}>Movies</Text>
+      {!movies?<View style={[defaultStyle.loadingContainer, defaultStyle.container]}><Text style={defaultStyle.text}>Loading...</Text></View>:
       <FlatList
         style={menuListStyle.list}
         data={movies}
@@ -38,6 +39,7 @@ export default function MovieListScreen({
           </Pressable>
         )}
       />
+      }
     </View>
   )
 }

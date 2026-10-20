@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { FlatList, Text, View } from "react-native";
 import { getMovie } from "../apiConnection/MoviesAccess";
 import { getMovieComments } from "../apiConnection/CommentsAccess";
+import { defaultStyle } from "../styles/DefaultStyle";
+import { menuDetailsStyle } from "../styles/MovieDetailsStyle";
 
 export default function MovieDetailsScreen({
   route
@@ -25,21 +27,22 @@ export default function MovieDetailsScreen({
   }, [])
 
   return !movie?null:(
-    <View>
-      <Text>
+    <View style={defaultStyle.container}>
+      <Text style={defaultStyle.header}>
         {movieTitle}
       </Text>
       {comments.length === 0
-      ? <Text>No comments</Text>
+      ? <Text style={defaultStyle.text}>No comments</Text>
       : <FlatList
+          style={menuDetailsStyle.commentsBlock}
           data={comments}
           keyExtractor={(comment) => comment.id}
           renderItem={(comment) => (
-            <View>
-              <Text>
+            <View style={menuDetailsStyle.commentBlock}>
+              <Text style={[defaultStyle.text, menuDetailsStyle.commentUsername]}>
                 {comment.item.account.name}
               </Text>
-              <Text>
+              <Text style={[defaultStyle.text, menuDetailsStyle.commentContent]}>
                 {comment.item.content}
               </Text>
             </View>
