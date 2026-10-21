@@ -27,7 +27,7 @@ export async function createComment(movieId, accountId, content) {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ content: content, movie: {"id": movieId}, accountId: {"id": accountId}})
+      body: JSON.stringify({ content: content, movie: {"id": movieId}, account: {"id": accountId}})
     })
 
     if (!response.ok) {
@@ -45,13 +45,13 @@ export async function createComment(movieId, accountId, content) {
 
 export async function updateComment(id, content) {
   try {
-    const response = await fetch(commentPath, {
-      method: "PUT",
+    const response = await fetch(commentPath+"/"+id, {
+      method: "PATCH",
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ id: id, content: content })
+      body: JSON.stringify({ content: content })
     })
 
     if (!response.ok) {

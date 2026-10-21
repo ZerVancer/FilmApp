@@ -34,5 +34,5 @@ export const movieDetailsStyle = StyleSheet.create({
 
   commentContent: {
     fontSize: 15,
-  }
+  },
 })

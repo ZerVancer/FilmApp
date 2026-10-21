@@ -18,7 +18,7 @@ export default function HomeScreen({
     init();
   }, [])
 
-  async function deleteUser() {
+  async function logOut() {
     setLogedIn(false)
 
     await SecureStore.deleteItemAsync("user")
@@ -47,13 +47,11 @@ export default function HomeScreen({
       <View style={homeStyle.loginoutBlock}>
         {console.log(logedIn)}
         {logedIn ?
-        <Pressable style={defaultStyle.button} onPress={() => deleteUser()}>
+        <Pressable style={defaultStyle.button} onPress={() => logOut()}>
           <Text style={defaultStyle.text}>Log out</Text>
         </Pressable> :
         <Pressable style={defaultStyle.button} onPress={() => navigation.navigate("LoginScreen")}>
-          <Text style={defaultStyle.text}>
-            Login or Register
-          </Text>
+          <Text style={defaultStyle.text}>Login or Register</Text>
         </Pressable>}
       </View>
     </View>

@@ -11,22 +11,22 @@ export default function LoginScreen({
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
 
+  function goBackIf(statement) {
+    if (statement) navigation.goBack()
+  }
+
   return (
     <View style={[defaultStyle.container, defaultStyle.aligned_horizontally]}>
       <Text style={defaultStyle.text}> Name: </Text>
-      <TextInput value={name} style={loginStyle.inputField} onChangeText={setName}/>
+      <TextInput value={name} autoCorrect={false} style={loginStyle.inputField} onChangeText={setName}/>
       <Text style={defaultStyle.text}> Password: </Text>
-      <TextInput value={password} style={loginStyle.inputField} onChangeText={setPassword}/>
-      <Pressable style={defaultStyle.button} onPress={() => {
-        if (registerAccount(name, password)) () => {navigation.goBack()}
-        }}>
+      <TextInput value={password} secureTextEntry={true} autoCorrect={false} style={loginStyle.inputField} onChangeText={setPassword}/>
+      <Pressable style={defaultStyle.button} onPress={() => {goBackIf(registerAccount(name, password))}}>
         <Text style={defaultStyle.text}>
           Register
         </Text>
       </Pressable>
-      <Pressable style={defaultStyle.button} onPress={() => {
-        if (loginAccount(name, password)) () => {navigation.goBack()}
-        }}>
+      <Pressable style={defaultStyle.button} onPress={() => {goBackIf(loginAccount(name, password))}}>
         <Text style={defaultStyle.text}> Login </Text>
       </Pressable>
       <Pressable style={defaultStyle.button} onPress={getAllAccounts}>

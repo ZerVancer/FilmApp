@@ -1,16 +1,20 @@
 import { useEffect, useState } from "react";
-import { FlatList, Text, View } from "react-native";
+import { FlatList, Pressable, Text, TextInput, ToastAndroid, View } from "react-native";
 import { getMovie } from "../apiConnection/MoviesAccess";
-import { getMovieComments } from "../apiConnection/CommentsAccess";
+import { createComment, deleteComment, getMovieComments, updateComment } from "../apiConnection/CommentsAccess";
 import { defaultStyle } from "../styles/DefaultStyle";
-import { menuDetailsStyle } from "../styles/MovieDetailsStyle";
+import { movieDetailsStyle } from "../styles/MovieDetailsStyle";
+import * as SecureStore from "expo-secure-store"
 
 export default function MovieDetailsScreen({
   route
 }) {
-  const [movieTitle, setMovieTitle] = useState("");
   const [movie, setMovie] = useState();
   const [comments, setComments] = useState([]);
+  const [content, setContent] = useState()
+  const [user, setuser] = useState()
+  const [focusedComment, setFocusedComment] = useState()
+  const [focusedCommentContent, setFocusedCommentContent] = useState()
 
   const movieId = route.params.movieId;
 
@@ -18,37 +22,98 @@ export default function MovieDetailsScreen({
     const init = async () => {
       const m = await getMovie(movieId);
       setMovie(m);
-      setMovieTitle(m.title);
       setComments(await getMovieComments(movieId));
+      setuser(JSON.parse(await SecureStore.getItemAsync("user")))
     }
 
     init();
 
   }, [])
 
+  async function comment(content, userId) {
+    await createComment(movie.id, userId, content)
+    setComments(await getMovieComments(movie.id))
+    setContent("")
+  }
+
+  async function trycomment(content) {
+    const user = JSON.parse(await SecureStore.getItemAsync("user"))
+
+    user ? 
+    comment(content, user.id) : 
+    ToastAndroid.show("You must be logged in to comment!", ToastAndroid.SHORT)
+  }
+
+  async function removeComment(commentId) {
+    deleteComment(commentId)
+
+    setComments(await getMovieComments(movieId))
+  }
+
+  async function edit(commentId) {
+    updateComment(commentId, focusedCommentContent)
+
+    setFocusedComment(null)
+  }
+
+  function focusOn(commentId, content) {
+    setFocusedCommentContent(content)
+
+    setFocusedComment(commentId)
+  }
+  
   return !movie?null:(
     <View style={defaultStyle.container}>
       <Text style={defaultStyle.header}>
-        {movieTitle}
+        {movie.title}
       </Text>
-      {comments.length === 0
-      ? <Text style={defaultStyle.text}>No comments</Text>
-      : <FlatList
-          style={menuDetailsStyle.commentsBlock}
+      <View style={movieDetailsStyle.addCommentBlock}>
+        <TextInput value={content} style={[movieDetailsStyle.textInputBlock, defaultStyle.text]} onChangeText={setContent} />
+        <Pressable style={defaultStyle.button} onPress={() => trycomment(content)}><Text style={defaultStyle.text}>Publish</Text></Pressable>
+      </View>
+      <FlatList
+          style={movieDetailsStyle.commentsBlock}
+          ListEmptyComponent={<Text style={defaultStyle.text}>No comments</Text>}
           data={comments}
           keyExtractor={(comment) => comment.id}
           renderItem={(comment) => (
-            <View style={menuDetailsStyle.commentBlock}>
-              <Text style={[defaultStyle.text, menuDetailsStyle.commentUsername]}>
+            focusedComment == comment.item.id ?
+            <View style={movieDetailsStyle.commentBlock}>
+              <Text style={[defaultStyle.text, movieDetailsStyle.commentUsername]}>
                 {comment.item.account.name}
               </Text>
-              <Text style={[defaultStyle.text, menuDetailsStyle.commentContent]}>
+              <TextInput value={focusedCommentContent} defaultValue={comment.item.content} style={[defaultStyle.text, movieDetailsStyle.commentContent]} onChangeText={setFocusedCommentContent}>
+              </TextInput>
+              <View>
+                <Pressable style={defaultStyle.button} onPress={() => edit(comment.item.id)}>
+                  <Text style={defaultStyle.text}>Save</Text>
+                </Pressable>
+                <Pressable style={defaultStyle.button} onPress={() => setFocusedComment(null)}>
+                  <Text style={defaultStyle.text}>Cancel</Text>
+                </Pressable>
+              </View>
+            </View>
+            :
+            <View style={movieDetailsStyle.commentBlock}>
+              <Text style={[defaultStyle.text, movieDetailsStyle.commentUsername]}>
+                {comment.item.account.name}
+              </Text>
+              <Text style={[defaultStyle.text, movieDetailsStyle.commentContent]}>
                 {comment.item.content}
               </Text>
+              {user && comment.item.account.name == user.name ?
+              <View>
+                <Pressable style={defaultStyle.button} onPress={() => focusOn(comment.item.id, comment.item.content)}>
+                  <Text style={defaultStyle.text}>Edit</Text>
+                </Pressable>
+                <Pressable style={defaultStyle.button} onPress={() => removeComment(comment.item.id)}>
+                  <Text style={defaultStyle.text}>Delete</Text>
+                </Pressable>
+              </View> :
+              null}
             </View>
           )}
         />
-      }
     </View>
   )
 }

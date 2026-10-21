@@ -1,4 +1,4 @@
-import { View, FlatList, Text, Pressable } from "react-native";
+import { View, FlatList, Text, Pressable, TextInput } from "react-native";
 import { getMovies } from "../apiConnection/MoviesAccess";
 import { useEffect, useState } from "react";
 import { defaultStyle } from "../styles/DefaultStyle";
@@ -9,6 +9,11 @@ export default function MovieListScreen({
 }) {
 
   const [movies, setMovies] = useState();
+  const [search, setSearch] = useState("");
+
+  function matchesSearch(movieTitle) {
+    return movieTitle.includes(search)
+  }
 
   useEffect(() => {
     const listMovies = async () => {
@@ -18,9 +23,24 @@ export default function MovieListScreen({
     listMovies()
   }, [])
 
+  const renderListItem = (movie) => {
+    return !matchesSearch(movie.title) ? null :
+    <Pressable style={[defaultStyle.button, menuListStyle.listItems]} onPress={() => navigation.navigate(
+      "MovieDetailsScreen",
+      {
+        movieId: movie.id
+      }
+    )}>
+      <Text style={defaultStyle.text}>
+        Movie: {movie.title}
+      </Text>
+    </Pressable>
+  }
+
   return (
     <View style={defaultStyle.container}>
       <Text style={defaultStyle.header}>Movies</Text>
+      <TextInput placeholder="Search" value={search} style={menuListStyle.searchField} onChangeText={setSearch} />
       {!movies?<View style={[defaultStyle.loadingContainer, defaultStyle.container]}><Text style={defaultStyle.text}>Loading...</Text></View>:
       <FlatList
         style={menuListStyle.list}
@@ -29,18 +49,7 @@ export default function MovieListScreen({
         windowSize={11}
         data={movies}
         keyExtractor={(movie) => movie.id}
-        renderItem={(movie) => (
-          <Pressable style={[defaultStyle.button, menuListStyle.listItems]} onPress={() => navigation.navigate(
-            "MovieDetailsScreen",
-            {
-              movieId: movie.item.id
-            }
-          )}>
-            <Text style={defaultStyle.text}>
-              Movie: {movie.item.title}
-            </Text>
-          </Pressable>
-        )}
+        renderItem={(movie) => (renderListItem(movie.item))}
       />
       }
     </View>

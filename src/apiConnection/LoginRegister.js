@@ -12,12 +12,12 @@ async function isLogedIn() {
 async function login(account) {
   await SecureStore.setItemAsync(
         "user",
-        JSON.stringify(account)
+        account
       )
 }
 
 export async function registerAccount(name, password) {
-  if (isLogedIn) return
+  if (await isLogedIn()) return
   try {
     const response = await fetch(accountPath+"/register", {
       method: "POST",
