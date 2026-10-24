@@ -11,8 +11,8 @@ export default function LoginScreen({
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
 
-  function goBackIf(statement) {
-    if (statement) navigation.goBack()
+  async function goBackIf(statement) {
+    if (await statement) navigation.goBack()
   }
 
   return (
@@ -28,9 +28,6 @@ export default function LoginScreen({
       </Pressable>
       <Pressable style={defaultStyle.button} onPress={() => {goBackIf(loginAccount(name, password))}}>
         <Text style={defaultStyle.text}> Login </Text>
-      </Pressable>
-      <Pressable style={defaultStyle.button} onPress={getAllAccounts}>
-        <Text style={defaultStyle.text}> Get Accounts </Text>
       </Pressable>
     </View>
 

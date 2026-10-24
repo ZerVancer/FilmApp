@@ -11,7 +11,6 @@ export async function getMovieComments(movieId) {
     }
 
     const result = await response.json();
-    console.log(result);
 
     return result;
   } catch (error) {
@@ -35,7 +34,6 @@ export async function createComment(movieId, accountId, content) {
     }
 
     const result = await response.json();
-    console.log(result);
 
     return result;
   } catch (error) {
@@ -59,7 +57,6 @@ export async function updateComment(id, content) {
     }
 
     const result = await response.json();
-    console.log(result);
 
     return result;
   } catch (error) {
@@ -78,7 +75,6 @@ export async function deleteComment(id) {
     }
 
     const result = await response.json();
-    console.log(result);
 
     return result;
   } catch (error) {

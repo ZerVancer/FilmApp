@@ -12,7 +12,6 @@ export async function getMovies() {
     }
 
     const result = await response.json();
-    console.log(result);
 
     return result;
   } catch (error) {
@@ -31,7 +30,6 @@ export async function getMovie(id) {
     }
 
     const result = await response.json();
-    console.log(result);
 
     return result;
   } catch (error) {

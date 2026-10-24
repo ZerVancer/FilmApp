@@ -37,8 +37,6 @@ export async function registerAccount(name, password) {
     } 
 
     if(responseBody != "") {
-      const result = JSON.parse(responseBody);
-      console.log(result)
       login(responseBody)
       ToastAndroid.show("Account registered and you are signed in!", ToastAndroid.SHORT)
       return true
@@ -67,8 +65,6 @@ export async function loginAccount(name, password) {
     const responseBody = await response.text();
 
     if(responseBody != "") {
-      const result = JSON.parse(responseBody)
-      console.log(result)
       login(responseBody)
       ToastAndroid.show("You are now logged in!", ToastAndroid.SHORT)
       return true
@@ -81,27 +77,5 @@ export async function loginAccount(name, password) {
     console.error(error.message);
     ToastAndroid.show("An error accured, try again.", ToastAndroid.SHORT)
     return false
-  }
-}
-
-export async function getAllAccounts() {
-  try {
-    const response = await fetch(accountPath+"/all", {
-      method: "GET",
-    })
-
-    if (!response.ok) {
-      throw new Error(`Response status: ${response.status}`);
-    }
-
-    const responseBody = await response.text();
-
-    if(responseBody != "") {
-      const result = JSON.parse(responseBody);
-      console.log(result);
-    }
-  } catch (error) {
-    console.error(error.message);
-    ToastAndroid.show("An error accured, try again.", ToastAndroid.SHORT)
   }
 }

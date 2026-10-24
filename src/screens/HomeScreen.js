@@ -1,29 +1,32 @@
 import { View, Text, Pressable, ToastAndroid } from "react-native";
 import { homeStyle } from "../styles/HomeStyle";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import * as SecureStore from "expo-secure-store"
 import { defaultStyle } from "../styles/DefaultStyle";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function HomeScreen({
   navigation
 }) {
   const [logedIn, setLogedIn] = useState(false);
 
-  useEffect(() => {
-    const init = async () => {
-      const result = await SecureStore.getItemAsync("user")
-      if (result != null) setLogedIn(true)
-    }
+  useFocusEffect(
+    useCallback( () => {
+      async function checkLogin() {
+        const result = await SecureStore.getItemAsync("user")
+        if (result != null) setLogedIn(true)
+      }
 
-    init();
-  }, [])
+      checkLogin()
+    })
+  )
 
   async function logOut() {
     setLogedIn(false)
 
-    await SecureStore.deleteItemAsync("user")
-
     ToastAndroid.show("You are logged out", ToastAndroid.SHORT)
+
+    await SecureStore.deleteItemAsync("user")
   }
 
   return (
@@ -45,7 +48,6 @@ export default function HomeScreen({
         </Pressable>
       </View>
       <View style={homeStyle.loginoutBlock}>
-        {console.log(logedIn)}
         {logedIn ?
         <Pressable style={defaultStyle.button} onPress={() => logOut()}>
           <Text style={defaultStyle.text}>Log out</Text>

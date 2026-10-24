@@ -12,7 +12,6 @@ export async function getAccountById(accountId) {
     }
 
     const result = await response.json();
-    console.log(result);
 
     return result;
   } catch (error) {
