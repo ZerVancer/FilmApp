@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FlatList, Pressable, Text, TextInput, ToastAndroid, View } from "react-native";
+import { FlatList, Linking, Pressable, Text, TextInput, ToastAndroid, View } from "react-native";
 import { getMovie } from "../apiConnection/MoviesAccess";
 import { createComment, deleteComment, getMovieComments, updateComment } from "../apiConnection/CommentsAccess";
 import { defaultStyle } from "../styles/DefaultStyle";
@@ -20,8 +20,7 @@ export default function MovieDetailsScreen({
 
   useEffect(() => {
     const init = async () => {
-      const m = await getMovie(movieId);
-      setMovie(m);
+      setMovie(await getMovie(movieId));
       setComments(await getMovieComments(movieId));
       setuser(JSON.parse(await SecureStore.getItemAsync("user")))
     }
@@ -45,13 +44,19 @@ export default function MovieDetailsScreen({
   }
 
   async function removeComment(commentId) {
-    deleteComment(commentId)
+    await deleteComment(commentId)
+
+    ToastAndroid.show("Comment deleted", ToastAndroid.SHORT)
 
     setComments(await getMovieComments(movieId))
   }
 
   async function edit(commentId) {
-    updateComment(commentId, focusedCommentContent)
+    await updateComment(commentId, focusedCommentContent)
+
+    ToastAndroid.show("Comment updated", ToastAndroid.SHORT)
+
+    setComments(await getMovieComments(movieId))
 
     setFocusedComment(null)
   }
@@ -61,12 +66,27 @@ export default function MovieDetailsScreen({
 
     setFocusedComment(commentId)
   }
+
+  function openWebsite(link) {
+    Linking.openURL(link)
+  }
   
-  return !movie?null:(
+  return !movie?
+    <View style={defaultStyle.loadingScreen}>
+      <Text style={defaultStyle.text}>Loading...</Text>
+    </View>:
     <View style={defaultStyle.container}>
       <Text style={defaultStyle.header}>
         {movie.title}
       </Text>
+      <View style={movieDetailsStyle.movieDetailsView}>
+        <Text style={[defaultStyle.text, movieDetailsStyle.movieDetails]}>
+          {movie.details}
+        </Text>
+        <Pressable style={[defaultStyle.button, movieDetailsStyle.imdbButton]} onPress={() => openWebsite(movie.imdbLink)}>
+          <Text style={defaultStyle.text}>IMDB</Text>
+        </Pressable>
+      </View>
       <View style={movieDetailsStyle.addCommentBlock}>
         <TextInput value={content} style={[movieDetailsStyle.textInputBlock, defaultStyle.text]} onChangeText={setContent} />
         <Pressable style={defaultStyle.button} onPress={() => trycomment(content)}><Text style={defaultStyle.text}>Publish</Text></Pressable>
@@ -82,9 +102,9 @@ export default function MovieDetailsScreen({
               <Text style={[defaultStyle.text, movieDetailsStyle.commentUsername]}>
                 {comment.item.account.name}
               </Text>
-              <TextInput value={focusedCommentContent} defaultValue={comment.item.content} style={[defaultStyle.text, movieDetailsStyle.commentContent]} onChangeText={setFocusedCommentContent}>
+              <TextInput value={focusedCommentContent} defaultValue={comment.item.content} style={[defaultStyle.text, movieDetailsStyle.commentContent, movieDetailsStyle.editingComment]} onChangeText={setFocusedCommentContent}>
               </TextInput>
-              <View>
+              <View style={movieDetailsStyle.commentButtonBlock}>
                 <Pressable style={defaultStyle.button} onPress={() => edit(comment.item.id)}>
                   <Text style={defaultStyle.text}>Save</Text>
                 </Pressable>
@@ -102,7 +122,7 @@ export default function MovieDetailsScreen({
                 {comment.item.content}
               </Text>
               {user && comment.item.account.name == user.name ?
-              <View>
+              <View style={movieDetailsStyle.commentButtonBlock}>
                 <Pressable style={defaultStyle.button} onPress={() => focusOn(comment.item.id, comment.item.content)}>
                   <Text style={defaultStyle.text}>Edit</Text>
                 </Pressable>
@@ -115,5 +135,4 @@ export default function MovieDetailsScreen({
           )}
         />
     </View>
-  )
 }

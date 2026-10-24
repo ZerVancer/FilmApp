@@ -4,6 +4,7 @@ export const defaultStyle = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#1A1A1A",
+    overflow: "scroll"
   },
 
   aligned_horizontally: {

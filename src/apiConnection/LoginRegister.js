@@ -74,6 +74,7 @@ export async function loginAccount(name, password) {
       return true
     } else {
       ToastAndroid.show("Name or password was incorrect!", ToastAndroid.SHORT)
+      return false
     }
     
   } catch (error) {
