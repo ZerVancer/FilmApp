@@ -12,7 +12,7 @@ export default function MovieListScreen({
   const [search, setSearch] = useState("");
 
   function matchesSearch(movieTitle) {
-    return movieTitle.includes(search)
+    return movieTitle.toLowerCase().includes(search.toLocaleLowerCase())
   }
 
   useEffect(() => {
@@ -32,7 +32,7 @@ export default function MovieListScreen({
       }
     )}>
       <Text style={defaultStyle.text}>
-        Movie: {movie.title}
+        {movie.title}
       </Text>
     </Pressable>
   }
@@ -41,7 +41,7 @@ export default function MovieListScreen({
     <View style={defaultStyle.container}>
       <Text style={defaultStyle.header}>Movies</Text>
       <TextInput placeholder="Search" value={search} style={menuListStyle.searchField} onChangeText={setSearch} />
-      {!movies?<View style={[defaultStyle.loadingContainer, defaultStyle.container]}><Text style={defaultStyle.text}>Loading...</Text></View>:
+      {!movies?<View style={defaultStyle.loadingScreen}><Text style={defaultStyle.text}>Loading...</Text></View>:
       <FlatList
         style={menuListStyle.list}
         initialNumToRender={10}

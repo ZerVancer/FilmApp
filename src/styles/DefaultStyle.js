@@ -12,11 +12,6 @@ export const defaultStyle = StyleSheet.create({
     rowGap: 10,
   },
 
-  loadingContainer: {
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
   header: {
     backgroundColor: "indigo",
     padding: 20,
@@ -33,5 +28,12 @@ export const defaultStyle = StyleSheet.create({
     backgroundColor: "indigo",
     borderRadius: 20,
     padding: 10,
+  },
+
+  loadingScreen: {
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#1A1A1A",
+    flex: 1,
   },
 })
